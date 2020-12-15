@@ -5,7 +5,7 @@ const LinkCard = ({ link, refreshLinks }) => {
     if (!link.archived) return
     link.archived = false
     try {
-      await fetch('/.netlify/functions/updateLink', {
+      await fetch('/api/updateLink', {
         method: 'PUT',
         body: JSON.stringify(link),
       })
@@ -19,7 +19,7 @@ const LinkCard = ({ link, refreshLinks }) => {
     if (link.archived) return
     link.archived = true
     try {
-      await fetch('/.netlify/functions/updateLink', {
+      await fetch('/api/updateLink', {
         method: 'PUT',
         body: JSON.stringify(link),
       })
@@ -32,7 +32,7 @@ const LinkCard = ({ link, refreshLinks }) => {
   const deleteLink = async () => {
     const id = link._id
     try {
-      await fetch('/.netlify/functions/deleteLink', {
+      await fetch('/api/deleteLink', {
         method: 'DELETE',
         body: JSON.stringify({ id }),
       })
@@ -46,7 +46,9 @@ const LinkCard = ({ link, refreshLinks }) => {
     <div className="card">
       <div className="card-header">{link.name}</div>
       <div className="card-body">
-        <a href={link.url}>{link.url}</a>
+        <a href={link.url} target="_blank" rel="noreferrer">
+          {link.url}
+        </a>
         <p>{link.description}</p>
       </div>
       <div className="card-footer">

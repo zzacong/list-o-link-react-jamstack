@@ -1,5 +1,7 @@
 const axios = require('axios')
-require('dotenv').config()
+const path = require('path')
+if (process.env.NODE_ENV !== 'production')
+  require('dotenv').config({ path: path.resolve(process.cwd(), '.env.local') })
 
 module.exports = async (query, variables) => {
   const {
