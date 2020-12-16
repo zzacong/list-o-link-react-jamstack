@@ -46,7 +46,7 @@ const LinkCard = ({ link, refreshLinks }) => {
     <div className="card">
       <div className="card-header">{link.name}</div>
       <div className="card-body">
-        <a href={link.url} target="_blank" rel="noreferrer">
+        <a href={link.url} target="_blank" rel="noopener noreferrer">
           {link.url}
         </a>
         <p>{link.description}</p>
