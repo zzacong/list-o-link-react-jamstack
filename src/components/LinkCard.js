@@ -1,12 +1,11 @@
-import React from 'react'
-
-const LinkCard = ({ link, refreshLinks }) => {
+export default function LinkCard({ link, refreshLinks }) {
   const unarchiveLink = async () => {
     if (!link.archived) return
     link.archived = false
     try {
-      await fetch('/api/updateLink', {
+      await fetch(`/api/links/${link._id}`, {
         method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(link),
       })
       refreshLinks()
@@ -19,8 +18,9 @@ const LinkCard = ({ link, refreshLinks }) => {
     if (link.archived) return
     link.archived = true
     try {
-      await fetch('/api/updateLink', {
+      await fetch(`/api/links/${link._id}`, {
         method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(link),
       })
       refreshLinks()
@@ -32,8 +32,9 @@ const LinkCard = ({ link, refreshLinks }) => {
   const deleteLink = async () => {
     const id = link._id
     try {
-      await fetch('/api/deleteLink', {
+      await fetch(`/api/links/${link._id}`, {
         method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id }),
       })
       refreshLinks()
@@ -43,7 +44,7 @@ const LinkCard = ({ link, refreshLinks }) => {
   }
 
   return (
-    <div className="card">
+    <div className="card mb-4">
       <div className="card-header">{link.name}</div>
       <div className="card-body">
         <a href={link.url} target="_blank" rel="noopener noreferrer">
@@ -65,5 +66,3 @@ const LinkCard = ({ link, refreshLinks }) => {
     </div>
   )
 }
-
-export default LinkCard

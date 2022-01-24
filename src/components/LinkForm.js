@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 
-const LinkForm = ({ refreshLinks }) => {
+export default function LinkForm({ refreshLinks }) {
   const [name, setName] = useState('')
   const [url, setUrl] = useState('')
   const [description, setDescription] = useState('')
@@ -15,8 +15,9 @@ const LinkForm = ({ refreshLinks }) => {
     e.preventDefault()
     const body = { name, url, description }
     try {
-      await fetch('/api/createLink', {
+      await fetch('/api/links', {
         method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),
       })
       resetForm()
@@ -68,5 +69,3 @@ const LinkForm = ({ refreshLinks }) => {
     </div>
   )
 }
-
-export default LinkForm

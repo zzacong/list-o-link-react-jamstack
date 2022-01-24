@@ -1,23 +1,23 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import LinkList from './components/LinkList'
 import LinkForm from './components/LinkForm'
 
-function App() {
+export default function App() {
   const [links, setLinks] = useState([])
 
-  const loadLinks = async () => {
+  const loadLinks = useCallback(async () => {
     try {
-      const res = await fetch('/api/getLinks')
+      const res = await fetch('/api/links')
       const links = await res.json()
       setLinks(links)
     } catch (error) {
       console.error(error)
     }
-  }
+  }, [])
 
   useEffect(() => {
     loadLinks()
-  }, [])
+  }, [loadLinks])
 
   return (
     <div className="container py-5">
@@ -27,5 +27,3 @@ function App() {
     </div>
   )
 }
-
-export default App
