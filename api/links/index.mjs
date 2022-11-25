@@ -14,7 +14,7 @@ export default async function (req, res) {
         CREATE_LINK,
         variables
       )
-      return res.status(200).json(createdLink)
+      return res.status(201).json(createdLink)
     }
   } catch (error) {
     console.error(error)

@@ -1,29 +1,27 @@
-import { useEffect, useState, useCallback } from 'react'
+import { useQuery } from '@tanstack/react-query'
+
 import LinkList from './components/LinkList'
 import LinkForm from './components/LinkForm'
 
+const loadLinks = async () => {
+  const links = await fetch('/api/links').then(res => res.json())
+  return links
+}
+
+export const queryKey = ['get-links']
+
 export default function App() {
-  const [links, setLinks] = useState([])
-
-  const loadLinks = useCallback(async () => {
-    try {
-      const res = await fetch('/api/links')
-      const links = await res.json()
-      setLinks(links)
-    } catch (error) {
-      console.error(error)
-    }
-  }, [])
-
-  useEffect(() => {
-    loadLinks()
-  }, [loadLinks])
+  const { data: links } = useQuery({
+    queryKey,
+    queryFn: loadLinks,
+    initialData: [],
+  })
 
   return (
     <div className="container py-5">
       <h1 className="text-center mb-5">List O' Link</h1>
-      <LinkForm refreshLinks={loadLinks} />
-      <LinkList links={links} refreshLinks={loadLinks} />
+      <LinkForm />
+      <LinkList links={links} />
     </div>
   )
 }

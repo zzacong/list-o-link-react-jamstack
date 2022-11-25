@@ -1,47 +1,41 @@
-export default function LinkCard({ link, refreshLinks }) {
-  const unarchiveLink = async () => {
-    if (!link.archived) return
-    link.archived = false
-    try {
-      await fetch(`/api/links/${link._id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(link),
-      })
-      refreshLinks()
-    } catch (error) {
-      console.error(error)
-    }
-  }
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 
-  const archiveLink = async () => {
-    if (link.archived) return
-    link.archived = true
-    try {
-      await fetch(`/api/links/${link._id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(link),
-      })
-      refreshLinks()
-    } catch (error) {
-      console.error(error)
-    }
-  }
+import { queryKey } from '../App'
 
-  const deleteLink = async () => {
-    const id = link._id
-    try {
-      await fetch(`/api/links/${link._id}`, {
-        method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id }),
-      })
-      refreshLinks()
-    } catch (error) {
-      console.error(error)
-    }
-  }
+const archiveLink = async ({ link, archive }) => {
+  link.archived = archive
+  await fetch(`/api/links/${link._id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(link),
+  })
+}
+
+const deleteLink = async link => {
+  const id = link._id
+  await fetch(`/api/links/${link._id}`, {
+    method: 'DELETE',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ id }),
+  })
+}
+
+export default function LinkCard({ link }) {
+  const queryClient = useQueryClient()
+
+  const archiveLinkMutation = useMutation({
+    mutationFn: archiveLink,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey })
+    },
+  })
+
+  const deleteLinkMutation = useMutation({
+    mutationFn: deleteLink,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey })
+    },
+  })
 
   return (
     <div className="card mb-4">
@@ -53,13 +47,28 @@ export default function LinkCard({ link, refreshLinks }) {
         <p>{link.description}</p>
       </div>
       <div className="card-footer">
-        <button className="btn btn-secondary mr-2" onClick={unarchiveLink}>
+        <button
+          className="btn btn-secondary mr-2"
+          onClick={() => {
+            if (!link.archived) return
+            archiveLinkMutation.mutate({ link, archive: false })
+          }}
+        >
           Unarchive
         </button>
-        <button className="btn btn-warning mr-2" onClick={archiveLink}>
+        <button
+          className="btn btn-warning mr-2"
+          onClick={() => {
+            if (link.archived) return
+            archiveLinkMutation.mutate({ link, archive: true })
+          }}
+        >
           Archive
         </button>
-        <button className="btn btn-danger" onClick={deleteLink}>
+        <button
+          className="btn btn-danger"
+          onClick={() => deleteLinkMutation.mutate(link)}
+        >
           Delete
         </button>
       </div>

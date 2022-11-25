@@ -1,9 +1,28 @@
 import { useState } from 'react'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 
-export default function LinkForm({ refreshLinks }) {
+import { queryKey } from '../App'
+
+const addLink = async ({ name, url, description }) => {
+  await fetch('/api/links', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name, url, description }),
+  })
+}
+
+export default function LinkForm() {
   const [name, setName] = useState('')
   const [url, setUrl] = useState('')
   const [description, setDescription] = useState('')
+
+  const queryClient = useQueryClient()
+  const addLinkMutation = useMutation({
+    mutationFn: addLink,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey })
+    },
+  })
 
   const resetForm = () => {
     setName('')
@@ -13,18 +32,8 @@ export default function LinkForm({ refreshLinks }) {
 
   const handleSubmit = async e => {
     e.preventDefault()
-    const body = { name, url, description }
-    try {
-      await fetch('/api/links', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body),
-      })
-      resetForm()
-      refreshLinks()
-    } catch (error) {
-      console.error(error)
-    }
+    addLinkMutation.mutate({ name, url, description })
+    resetForm()
   }
 
   return (
