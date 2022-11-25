@@ -6,7 +6,7 @@ export const config = {
   runtime: 'experimental-edge',
 }
 
-export default async function (req) {
+export default async function handler(req) {
   try {
     if (req.method === 'GET') {
       const data = await sendQuery(GET_LINKS)
