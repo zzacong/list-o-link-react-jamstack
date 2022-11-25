@@ -1,5 +1,5 @@
-import sendQuery from '../../lib/utils/sendQuery'
-import { DELETE_LINK, UPDATE_LINK } from '../../lib/utils/linkQuery'
+import sendQuery from '../../lib/utils/sendQuery.mjs'
+import { DELETE_LINK, UPDATE_LINK } from '../../lib/utils/linkQuery.mjs'
 
 export default async function handler(req, res) {
   try {

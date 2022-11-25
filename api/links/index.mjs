@@ -1,5 +1,5 @@
-import sendQuery from '../../lib/utils/sendQuery'
-import { GET_LINKS, CREATE_LINK } from '../../lib/utils/linkQuery'
+import sendQuery from '../../lib/utils/sendQuery.mjs'
+import { GET_LINKS, CREATE_LINK } from '../../lib/utils/linkQuery.mjs'
 
 export default async function (req, res) {
   try {
