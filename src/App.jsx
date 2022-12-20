@@ -3,18 +3,14 @@ import { useQuery } from '@tanstack/react-query'
 import LinkList from './components/LinkList'
 import LinkForm from './components/LinkForm'
 
-const loadLinks = async () => {
-  const links = await fetch('/api/links').then(res => res.json())
-  return links
-}
+const loadLinks = () => fetch('/api/links').then(res => res.json())
 
-export const queryKey = ['get-links']
+export const queryKey = 'get-links'
 
 export default function App() {
   const { data: links } = useQuery({
-    queryKey,
+    queryKey: [queryKey],
     queryFn: loadLinks,
-    initialData: [],
   })
 
   return (

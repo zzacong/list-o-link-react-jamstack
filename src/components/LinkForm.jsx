@@ -20,7 +20,7 @@ export default function LinkForm() {
   const addLinkMutation = useMutation({
     mutationFn: addLink,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey })
+      queryClient.invalidateQueries({ queryKey: [queryKey] })
     },
   })
 

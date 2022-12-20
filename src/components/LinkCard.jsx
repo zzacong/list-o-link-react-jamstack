@@ -25,15 +25,15 @@ export default function LinkCard({ link }) {
 
   const archiveLinkMutation = useMutation({
     mutationFn: archiveLink,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey })
+    onSettled: () => {
+      queryClient.invalidateQueries([queryKey])
     },
   })
 
   const deleteLinkMutation = useMutation({
     mutationFn: deleteLink,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey })
+    onSettled: () => {
+      queryClient.invalidateQueries([queryKey])
     },
   })
 
