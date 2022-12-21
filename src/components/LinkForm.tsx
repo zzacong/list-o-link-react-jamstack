@@ -1,15 +1,18 @@
+import { type Link } from '../types'
+
 import { useState } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
-import { queryKey } from '../App'
-
-const addLink = async ({ name, url, description }) => {
-  await fetch('/api/links', {
+const addLink = async ({
+  name,
+  url,
+  description,
+}: Omit<Link, '_id' | 'archived'>) =>
+  fetch('/api/links', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ name, url, description }),
   })
-}
 
 export default function LinkForm() {
   const [name, setName] = useState('')
@@ -20,7 +23,7 @@ export default function LinkForm() {
   const addLinkMutation = useMutation({
     mutationFn: addLink,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [queryKey] })
+      queryClient.invalidateQueries({ queryKey: ['get-links'] })
     },
   })
 
@@ -30,7 +33,7 @@ export default function LinkForm() {
     setUrl('')
   }
 
-  const handleSubmit = async e => {
+  const handleSubmit: React.FormEventHandler = async e => {
     e.preventDefault()
     addLinkMutation.mutate({ name, url, description })
     resetForm()

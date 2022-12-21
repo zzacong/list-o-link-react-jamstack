@@ -1,6 +1,19 @@
+import { type Link } from '../types'
+import { useQuery } from '@tanstack/react-query'
+
 import LinkCard from './LinkCard'
 
-export default function LinkList({ links }) {
+const loadLinks = () =>
+  fetch('/api/links').then(res => res.json() as unknown as Link[])
+
+export default function LinkList() {
+  const { data: links, refetch } = useQuery({
+    queryKey: ['get-links'],
+    queryFn: loadLinks,
+  })
+
+  console.log('🚀 ~ file: App.jsx:15 ~ App ~ links', links)
+
   const active = links?.filter(link => !link.archived)
   const archived = links?.filter(link => link.archived)
 
